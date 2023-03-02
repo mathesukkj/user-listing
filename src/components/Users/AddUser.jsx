@@ -57,11 +57,9 @@ export default function AddUser(props) {
         if (formValues.age < 1) {
             return;
         }
+        props.onAddUser(formValues.username, formValues.age);
         setFormValues(initialFormValues);
-        console.log(formValues);
     }
-
-    function handleButtonClick() {}
 
     return (
         <Card>
@@ -83,11 +81,7 @@ export default function AddUser(props) {
                     value={formValues.age}
                     onChange={handleInputChange}
                 />
-                <Button
-                    type="submit"
-                    onClick={handleButtonClick}
-                    text="Add User"
-                />
+                <Button type="submit" text="Add User" />
             </Form>
         </Card>
     );
