@@ -48,6 +48,15 @@ export default function AddUser(props) {
 
     function handleAddUser(e) {
         e.preventDefault();
+        if (
+            !formValues.username.trim().length ||
+            !formValues.age.trim().length
+        ) {
+            return;
+        }
+        if (formValues.age < 1) {
+            return;
+        }
         setFormValues(initialFormValues);
         console.log(formValues);
     }
