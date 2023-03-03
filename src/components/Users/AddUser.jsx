@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Card from "./../UI/Card";
 import styled from "styled-components";
 import Button from "../UI/Button";
+import ErrorModal from "../UI/ErrorModal";
 
 const Form = styled.form`
     margin: 0.5rem auto;
@@ -38,6 +39,7 @@ export default function AddUser(props) {
     };
 
     const [formValues, setFormValues] = useState(initialFormValues);
+    const [error, setError] = useState("");
 
     function handleInputChange(e) {
         setFormValues({
@@ -52,37 +54,60 @@ export default function AddUser(props) {
             !formValues.username.trim().length ||
             !formValues.age.trim().length
         ) {
+            setError({
+                title: "Invalid input",
+                text: "Enter a valid value instead",
+            });
             return;
         }
         if (formValues.age < 1) {
+            setError({
+                title: "Invalid age",
+                text: "Enter a value greater than 1 instead",
+            });
             return;
         }
+        setError();
         props.onAddUser(formValues.username, formValues.age);
         setFormValues(initialFormValues);
     }
 
-    return (
-        <Card>
-            <Form onSubmit={handleAddUser}>
-                <label htmlFor="username">Username</label>
-                <input
-                    type="text"
-                    name="username"
-                    id="username"
-                    value={formValues.username}
-                    onChange={handleInputChange}
-                />
-                <label htmlFor="age">Age (Years)</label>
+    function handleConfirm() {
+        setError();
+    }
 
-                <input
-                    type="number"
-                    name="age"
-                    id="age"
-                    value={formValues.age}
-                    onChange={handleInputChange}
+    return (
+        <div>
+            {error && (
+                <ErrorModal
+                    onConfirm={handleConfirm}
+                    title={error.title}
+                    text={error.text}
                 />
-                <Button type="submit" text="Add User" />
-            </Form>
-        </Card>
+            )}
+
+            <Card>
+                <Form onSubmit={handleAddUser}>
+                    <label htmlFor="username">Username</label>
+                    <input
+                        type="text"
+                        name="username"
+                        id="username"
+                        value={formValues.username}
+                        onChange={handleInputChange}
+                    />
+                    <label htmlFor="age">Age (Years)</label>
+
+                    <input
+                        type="number"
+                        name="age"
+                        id="age"
+                        value={formValues.age}
+                        onChange={handleInputChange}
+                    />
+                    <Button type="submit" text="Add User" />
+                </Form>
+            </Card>
+        </div>
     );
 }
